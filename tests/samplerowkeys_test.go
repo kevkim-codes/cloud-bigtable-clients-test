@@ -23,10 +23,10 @@ import (
 	"testing"
 	"time"
 
-	btpb "cloud.google.com/go/bigtable/apiv2/bigtablepb"
 	"github.com/google/go-cmp/cmp"
 	"github.com/googleapis/cloud-bigtable-clients-test/testproxypb"
 	"github.com/stretchr/testify/assert"
+	btpb "google.golang.org/genproto/googleapis/bigtable/v2"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/testing/protocmp"
@@ -83,8 +83,8 @@ func TestSampleRowKeys_NoRetry_NoEmptyKey(t *testing.T) {
 	// 1. Instantiate the mock server
 	recorder := make(chan *sampleRowKeysReqRecord, 1)
 	sequence := []sampleRowKeysAction{
-		{rowKey: []byte("row-31"), offsetBytes: 30},
-		{rowKey: []byte("row-98"), offsetBytes: 65},
+		sampleRowKeysAction{rowKey: []byte("row-31"), offsetBytes: 30},
+		sampleRowKeysAction{rowKey: []byte("row-98"), offsetBytes: 65},
 	}
 	server := initMockServer(t)
 	server.SampleRowKeysFn = mockSampleRowKeysFn(recorder, sequence)
@@ -292,8 +292,8 @@ func TestSampleRowKeys_Retry_WithRetryInfo(t *testing.T) {
 	recorder := make(chan *sampleRowKeysReqRecord, 2)
 	mdRecorder := make(chan metadata.MD, 2)
 	sequence := []sampleRowKeysAction{
-		{rpcError: codes.Unavailable, retryInfo: "2s"},
-		{rowKey: []byte("row-31"), offsetBytes: 30},
+		sampleRowKeysAction{rpcError: codes.Unavailable, retryInfo: "2s"},
+		sampleRowKeysAction{rowKey: []byte("row-31"), offsetBytes: 30},
 	}
 	server := initMockServer(t)
 	server.SampleRowKeysFn = mockSampleRowKeysFnWithMetadata(recorder, mdRecorder, sequence)
