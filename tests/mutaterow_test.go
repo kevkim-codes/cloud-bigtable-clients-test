@@ -103,6 +103,7 @@ func TestMutateRow_Generic_Headers(t *testing.T) {
 	if !strings.Contains(resource, tableName) && !strings.Contains(resource, url.QueryEscape(tableName)) {
 		assert.Fail(t, "Resource info is missing in the request header")
 	}
+
 	assert.Contains(t, resource, profileID)
 }
 
